@@ -6,61 +6,43 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      name: { first: 'Rajesh', last: 'Siva' },
-      company: 'Stats',
-      companies: [{
-        name: 'Logiware'
-      }, {
-        name: 'Azureiken'
-      }, {
-        name: 'Ameex'
-      }],
-      users: []
+      users: [],
+      searchField: ''
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
-    .then((response) => response.json())
-    .then(users => {
-      this.setState(()=> {
-        return {
-          users: users
-        }
-      })
-    })
+      .then((response) => response.json())
+      .then(users => {
+        this.setState(() => {
+          return {
+            users
+          }
+        })
+      });
   }
 
   render() {
+    const filteredUsers = this.state.users.filter((user) => {
+      return user.name.toLocaleLowerCase().includes(this.state.searchField)
+    });
+
     return (
       <div className="App">
-        <header className="App-header">
-          <p>Hey {this.state.name.first} {this.state.name.last}. I work at {this.state.company}</p>
-          <button onClick={() => {
-            this.setState(() => {
-              return {
-                name: {
-                  first: 'Magizh',
-                  last: 'Rajesh'
-                }
-              }
-            }, () => {
-              console.log(this.state);
-            });
-          }}>Change Name</button>
-
-          <p>Companies I worked before are,</p>
-          <div className="companies">
-            {
-              this.state.companies.map((company) => {
-                return <h1>{company.name}</h1>
-              })
+        <input className='search-box' type='search' placeholder='search users..' onChange={(event) => {
+          const searchField = event.target.value.toLocaleLowerCase();
+          this.setState(() => {
+            return {
+              searchField
             }
-          </div>
+          });
+        }} />
+        <header className="App-header">
           <p>Here are some users,</p>
           <div className='users'>
             {
-              this.state.users.map((user) => {
+              filteredUsers.map((user) => {
                 return <h3 id={user.id}>{user.name}</h3>
               })
             }
