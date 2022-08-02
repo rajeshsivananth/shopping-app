@@ -14,8 +14,21 @@ class App extends Component {
         name: 'Azureiken'
       }, {
         name: 'Ameex'
-      }]
+      }],
+      users: []
     };
+  }
+
+  componentDidMount(){
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then((response) => response.json())
+    .then(users => {
+      this.setState(()=> {
+        return {
+          users: users
+        }
+      })
+    })
   }
 
   render() {
@@ -41,6 +54,14 @@ class App extends Component {
             {
               this.state.companies.map((company) => {
                 return <h1>{company.name}</h1>
+              })
+            }
+          </div>
+          <p>Here are some users,</p>
+          <div className='users'>
+            {
+              this.state.users.map((user) => {
+                return <h3 id={user.id}>{user.name}</h3>
               })
             }
           </div>
