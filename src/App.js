@@ -23,21 +23,30 @@ class App extends Component {
       });
   }
 
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase();
+    this.setState(() => {
+      return {
+        searchField
+      }
+    });
+  };
+
   render() {
-    const filteredUsers = this.state.users.filter((user) => {
-      return user.name.toLocaleLowerCase().includes(this.state.searchField)
+
+    const { users, searchField } = this.state;
+    const { onSearchChange } = this;
+    const filteredUsers = users.filter((user) => {
+      return user.name.toLocaleLowerCase().includes(searchField)
     });
 
     return (
       <div className="App">
-        <input className='search-box' type='search' placeholder='search users..' onChange={(event) => {
-          const searchField = event.target.value.toLocaleLowerCase();
-          this.setState(() => {
-            return {
-              searchField
-            }
-          });
-        }} />
+        <input className='search-box'
+          type='search'
+          placeholder='search users..'
+          onChange={onSearchChange}
+        />
         <header className="App-header">
           <p>Here are some users,</p>
           <div className='users'>
