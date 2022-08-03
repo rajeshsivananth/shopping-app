@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import logo from './logo.svg';
+
+import CardList from './components/card-list/card-list.component';
 import './App.css';
 
 class App extends Component {
@@ -48,14 +49,7 @@ class App extends Component {
           onChange={onSearchChange}
         />
         <header className="App-header">
-          <p>Here are some users,</p>
-          <div className='users'>
-            {
-              filteredUsers.map((user) => {
-                return <h3 id={user.id}>{user.name}</h3>
-              })
-            }
-          </div>
+          <CardList users={filteredUsers}/>
         </header>
       </div>
     );
