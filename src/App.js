@@ -1,55 +1,47 @@
-import { Component } from 'react';
+import { Component, useState, useEffect } from 'react';
 
 import CardList from './components/card-list/card-list.component';
 import SearchBox from './components/search-box/search-box.component';
 
 import './App.css';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      users: [],
-      searchField: ''
-    };
-  }
+const App = () => {
+  const [searchField, setSearchField] = useState('');
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState(users);
 
-  componentDidMount() {
+  useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then(users => {
-        this.setState(() => {
-          return {
-            users
-          }
-        })
+        setUsers(users);
       });
-  }
+  }, []);
 
-  onSearchChange = (event) => {
-    const searchField = event.target.value.toLocaleLowerCase();
-    this.setState(() => {
-      return {
-        searchField
-      }
-    });
-  };
-
-  render() {
-
-    const { users, searchField } = this.state;
-    const { onSearchChange } = this;
-    const filteredUsers = users.filter((user) => {
+  useEffect(() => {
+    const newFilteredUsers = users.filter((user) => {
       return user.name.toLocaleLowerCase().includes(searchField)
     });
+    setFilteredUsers(newFilteredUsers);
+  }, [users, searchField]);
 
-    return (
-      <div className="App">
-        <SearchBox placeholder="Search users.." className="search-box" onChangeHandler={onSearchChange}/>
-        <CardList users={filteredUsers} />
-      </div>
-    );
-  }
-}
+
+
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  };
+
+  return (
+    <div>
+      <h1>Hello Monsters</h1>
+      <SearchBox
+        placeholder="Search users.."
+        className="search-box"
+        onChangeHandler={onSearchChange} />
+      <CardList users={filteredUsers} />
+    </div>
+  );
+};
 
 export default App;
